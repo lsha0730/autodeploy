@@ -1,0 +1,21 @@
+name: Deploy from Docker Hub
+
+on:
+  workflow_run:
+    workflows: ["Dockerize and Push to Docker Hub"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Pull Docker image
+      run: docker pull lsha0730/dinubot:latest
+
+    - name: Run Docker container
+      run: |
+        docker stop dinubot || true
+        docker rm dinubot || true
+        docker run -d --name dinubot lsha0730/dinubot:latest
