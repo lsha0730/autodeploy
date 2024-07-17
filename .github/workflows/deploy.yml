@@ -42,4 +42,4 @@ jobs:
       run: |
         docker stop dinubot || true
         docker rm dinubot || true
-        docker run -d --name dinubot lsha0730/dinubot:latest
+        docker run -d -p 8000:8000 --name dinubot lsha0730/dinubot:latest
