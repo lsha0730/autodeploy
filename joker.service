@@ -1,0 +1,18 @@
+[Unit]
+Description=Autodeployed Jokester
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStart=/usr/bin/docker run -d -p 3000:3000 --name joker lsha0730/joker:latest
+ExecStop=/bin/bash -c "/usr/bin/docker stop joker && /usr/bin/docker rm joker"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Restart=always

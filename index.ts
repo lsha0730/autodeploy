@@ -1,7 +1,7 @@
 import axios from "axios"
 import express from "express"
 
-const PORT = 8000
+const PORT = 3000
 
 async function getJoke() {
     const {data} = await axios.get("https://icanhazdadjoke.com", {
