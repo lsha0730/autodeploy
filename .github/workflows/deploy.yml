@@ -28,18 +28,36 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: lsha0730/dinubot:latest
+          tags: lsha0730/joker:latest
+      - 
+        name: Upload systemd service file
+        uses: actions/upload-artifact@v3
+        with:
+          name: joker-service-file
+          path: ./joker.service
 
   deploy:
     runs-on: self-hosted
     needs: dockerize
 
     steps:
-    - name: Pull Docker image
-      run: docker pull lsha0730/dinubot:latest
+    - name: Download systemd service file
+      uses: actions/download-artifact@v3
+      with:
+        name: joker-service-file
+        path: .
 
-    - name: Run Docker container
+    - name: Pull Docker image
+      run: docker pull lsha0730/joker:latest
+
+    - name: Copy systemd service file
+      run: sudo cp joker.service /etc/systemd/system/joker.service
+
+    - name: Reload systemd daemon
+      run: sudo systemctl daemon-reload
+
+    - name: Enable and start Joker service
       run: |
-        docker stop dinubot || true
-        docker rm dinubot || true
-        docker run -d -p 8000:8000 --name dinubot lsha0730/dinubot:latest
+        sudo systemctl enable joker
+        sudo systemctl start joker
+
